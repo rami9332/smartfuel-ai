@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>SmartFuel AI – Alerts</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: #0b0b0d;
+      color: #f5f5f7;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #1f1f23;
+      background: #111114;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+    main {
+      padding: 1.5rem 2rem 3rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(63,94,251,0.08), rgba(252,70,107,0.08));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.8rem;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      opacity: 0.75;
+      letter-spacing: 0.08em;
+    }
+    .card .value {
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin-top: 0.35rem;
+    }
+    .card.critical { border-color: rgba(255,59,48,0.3); }
+    .card.warning { border-color: rgba(255,149,0,0.35); }
+    .card.info { border-color: rgba(52,199,89,0.35); }
+    form.filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      background: #121217;
+      padding: 1rem 1.2rem;
+      border-radius: 0.8rem;
+      border: 1px solid #1f1f23;
+    }
+    label {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      margin-right: 0.3rem;
+    }
+    input, select {
+      padding: 0.5rem 0.7rem;
+      background: #1b1b22;
+      color: inherit;
+      border: 1px solid #2c2c36;
+      border-radius: 0.4rem;
+      transition: border-color 0.2s ease;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3878ff;
+    }
+    button {
+      padding: 0.6rem 1.1rem;
+      background: #3878ff;
+      color: #fff;
+      border: none;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background: #4c8dff;
+      transform: translateY(-1px);
+    }
+    .charts {
+      margin: 2rem 0;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .chart-card {
+      background: #121217;
+      padding: 1rem;
+      border-radius: 0.8rem;
+      border: 1px solid #1f1f23;
+      flex: 1 1 300px;
+      min-height: 220px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #121217;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      border: 1px solid #1f1f23;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #1f1f23;
+      font-size: 0.94rem;
+    }
+    th {
+      text-align: left;
+      background: #15151c;
+      cursor: pointer;
+      user-select: none;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+    .badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge.critical { background: #ff3b30; color: #fff; }
+    .badge.warning { background: #ff9500; color: #111; }
+    .badge.info { background: #34c759; color: #111; }
+    tr.severity-critical { background: rgba(255,59,48,0.08); }
+    tr.severity-warning { background: rgba(255,149,0,0.08); }
+    tr:hover { background: rgba(56,120,255,0.08); }
+    .meta {
+      font-size: 0.8rem;
+      opacity: 0.65;
+      margin-top: 0.5rem;
+    }
+    .auto-refresh {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SmartFuel Alerts</h1>
+    <div class="auto-refresh">
+      <input type="checkbox" id="auto-refresh-toggle" {% if auto_refresh %}checked{% endif %} />
+      <label for="auto-refresh-toggle">Auto Refresh (60s)</label>
+    </div>
+  </header>
+  <main>
+    <div class="cards">
+      <div class="card">
+        <h2>Alerts gesamt</h2>
+        <div class="value">{{ summary.total }}</div>
+        <div class="meta">Letztes Update: {{ alerts[0].scored_at if alerts else '–' }}</div>
+      </div>
+      <div class="card critical">
+        <h2>Critical</h2>
+        <div class="value">{{ summary.critical }}</div>
+      </div>
+      <div class="card warning">
+        <h2>Warning</h2>
+        <div class="value">{{ summary.warning }}</div>
+      </div>
+      <div class="card info">
+        <h2>Info</h2>
+        <div class="value">{{ summary.info }}</div>
+      </div>
+    </div>
+
+    <form method="get" class="filters">
+      <input type="hidden" name="auto_refresh" id="auto-refresh-input" value="{{ 1 if auto_refresh else 0 }}" />
+      <label>Sensor:</label>
+      <input type="text" name="sensor_no" value="{{ sensor_no or '' }}" />
+      <label>Min. Probability:</label>
+      <input type="number" name="min_probability" step="0.01" min="0" max="1" value="{{ min_probability if min_probability is not none else '' }}" />
+      <label>Limit:</label>
+      <input type="number" name="limit" min="1" max="500" value="{{ limit }}" />
+      <button type="submit">Aktualisieren</button>
+      <div class="meta">Thresholds – Warn: {{ summary.threshold }}, Critical: {{ summary.critical_threshold }}</div>
+    </form>
+
+  <div class="charts">
+    <div class="chart-card">
+      <canvas id="severityChart" height="140"></canvas>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th data-key="sensor_no">Sensor</th>
+        <th data-key="date">Datum</th>
+        <th data-key="fault_probability">Probability</th>
+        <th data-key="severity">Severity</th>
+        <th data-key="fault_event">Event</th>
+        <th data-key="fault_active">Aktiv</th>
+        <th data-key="temperature_c">Temp (°C)</th>
+        <th data-key="vapour_flow_rate">Flow (l/min)</th>
+        <th data-key="source_file">Quelle</th>
+        <th data-key="scored_at">Bewertet am</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for alert in alerts %}
+        <tr class="severity-{{ alert.severity or 'info' }}">
+          <td>{{ alert.sensor_no or '–' }}</td>
+          <td>{{ alert.date or '–' }}</td>
+          <td>{{ '%.3f'|format(alert.fault_probability) }}</td>
+          <td>
+            {% if alert.severity == 'critical' %}
+              <span class="badge critical">Critical</span>
+            {% elif alert.severity == 'warning' %}
+              <span class="badge warning">Warning</span>
+            {% else %}
+              <span class="badge info">Info</span>
+            {% endif %}
+          </td>
+          <td>{{ alert.fault_event }}</td>
+          <td>{{ alert.fault_active }}</td>
+          <td>{{ alert.temperature_c or '–' }}</td>
+          <td>{{ alert.vapour_flow_rate or '–' }}</td>
+          <td>{{ alert.source_file or '–' }}</td>
+          <td>{{ alert.scored_at or '–' }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="10">Keine Einträge vorhanden.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script>
+    const summary = {{ summary | tojson }};
+    const autoRefreshEnabled = {{ 1 if auto_refresh else 0 }};
+    const ctx = document.getElementById('severityChart');
+    if (ctx && window.Chart) {
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Critical', 'Warning', 'Info'],
+          datasets: [{
+            data: [summary.critical, summary.warning, summary.info],
+            backgroundColor: ['#ff3b30', '#ff9500', '#34c759'],
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          plugins: {
+            legend: {
+              labels: {
+                color: '#f4f4f4',
+              },
+            },
+          },
+        },
+      });
+    }
+
+    const toggle = document.getElementById('auto-refresh-toggle');
+    const hiddenInput = document.getElementById('auto-refresh-input');
+    let refreshHandle = null;
+    function applyRefresh(state) {
+      if (refreshHandle) {
+        clearInterval(refreshHandle);
+        refreshHandle = null;
+      }
+      if (state) {
+        refreshHandle = setInterval(() => {
+          const url = new URL(window.location.href);
+          url.searchParams.set('auto_refresh', '1');
+          window.location.href = url.toString();
+        }, 60000);
+      }
+    }
+    if (toggle) {
+      toggle.addEventListener('change', (e) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('auto_refresh', e.target.checked ? '1' : '0');
+        hiddenInput.value = e.target.checked ? '1' : '0';
+        window.location.href = url.toString();
+      });
+      applyRefresh(autoRefreshEnabled);
+    }
+
+    // Table sorting
+    const table = document.querySelector('table');
+    if (table) {
+      const tbody = table.querySelector('tbody');
+      table.querySelectorAll('th[data-key]').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key;
+          const rows = Array.from(tbody.querySelectorAll('tr'));
+          const ascending = th.classList.toggle('asc');
+          rows.sort((a, b) => {
+            const av = a.children[Array.from(th.parentNode.children).indexOf(th)].innerText;
+            const bv = b.children[Array.from(th.parentNode.children).indexOf(th)].innerText;
+            if (!isNaN(av) && !isNaN(bv)) {
+              return ascending ? av - bv : bv - av;
+            }
+            return ascending ? av.localeCompare(bv) : bv.localeCompare(av);
+          });
+          rows.forEach((row) => tbody.appendChild(row));
+        });
+      });
+    }
+  </script>
+</main>
+</body>
+</html>

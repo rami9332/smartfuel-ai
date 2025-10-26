@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  smartfuel-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SMARTFUEL_ALERT_THRESHOLD=${SMARTFUEL_ALERT_THRESHOLD:-0.4}
+      - SMARTFUEL_ALERT_CRITICAL_THRESHOLD=${SMARTFUEL_ALERT_CRITICAL_THRESHOLD:-0.7}
+      - SMARTFUEL_SCORING_INTERVAL_MIN=${SMARTFUEL_SCORING_INTERVAL_MIN:-30}
+      - SMARTFUEL_SCORING_TOP_N=${SMARTFUEL_SCORING_TOP_N:-50}
+      - API_KEY=${API_KEY:-dev-1234}
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./reports:/app/reports
+      - ./Data:/app/Data
+      - ./smartfuel.sqlite:/app/smartfuel.sqlite

@@ -1,0 +1,2 @@
+id,started_at,finished_at,alerts_saved,model_path,metrics_path,threshold,critical_threshold,note
+1,2025-10-26 01:03:54.464804,2025-10-26 01:03:54.606301,200,reports/models/fault_model_gbm.joblib,reports/fault_model_gbm_metrics.json,0.4,0.7,

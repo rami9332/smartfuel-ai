@@ -1,0 +1,164 @@
+{
+  "roc_auc": 0.9746835443037976,
+  "classification_report": {
+    "0": {
+      "precision": 0.9518072289156626,
+      "recall": 1.0,
+      "f1-score": 0.9753086419753086,
+      "support": 158.0
+    },
+    "1": {
+      "precision": 1.0,
+      "recall": 0.42857142857142855,
+      "f1-score": 0.6,
+      "support": 14.0
+    },
+    "accuracy": 0.9534883720930233,
+    "macro avg": {
+      "precision": 0.9759036144578312,
+      "recall": 0.7142857142857143,
+      "f1-score": 0.7876543209876543,
+      "support": 172.0
+    },
+    "weighted avg": {
+      "precision": 0.9557298963295041,
+      "recall": 0.9534883720930233,
+      "f1-score": 0.944760264140109,
+      "support": 172.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      158,
+      0
+    ],
+    [
+      8,
+      6
+    ]
+  ],
+  "train_size": 1608,
+  "test_size": 172,
+  "top_features": [
+    {
+      "feature": "num__fault_event_roll7",
+      "importance": 0.1124589913790177
+    },
+    {
+      "feature": "num__fault_event_roll30",
+      "importance": 0.06766736180161934
+    },
+    {
+      "feature": "num__fault_active_roll3",
+      "importance": 0.05379412738135792
+    },
+    {
+      "feature": "num__days_since_prev",
+      "importance": 0.05006123595556336
+    },
+    {
+      "feature": "num__temperature_std3",
+      "importance": 0.047350701781552436
+    },
+    {
+      "feature": "num__rec_rate_ma3",
+      "importance": 0.04295371943373285
+    },
+    {
+      "feature": "num__recovery_rate_pos",
+      "importance": 0.04237354158843803
+    },
+    {
+      "feature": "num__recovery_rate",
+      "importance": 0.037159682896540425
+    },
+    {
+      "feature": "num__recovery_rate_diff1",
+      "importance": 0.03424299318588378
+    },
+    {
+      "feature": "num__vapour_flow_std3",
+      "importance": 0.029822826958640265
+    },
+    {
+      "feature": "num__fuel_flow_rate",
+      "importance": 0.024270250815265383
+    },
+    {
+      "feature": "num__temperature_c_diff1",
+      "importance": 0.021301910027893417
+    },
+    {
+      "feature": "num__temperature_c_lag1",
+      "importance": 0.017655419296832443
+    },
+    {
+      "feature": "num__temperature_c",
+      "importance": 0.01732166034442965
+    },
+    {
+      "feature": "num__fuel_transfers",
+      "importance": 0.01718858274867937
+    }
+  ],
+  "numeric_features": [
+    "id",
+    "serial_no",
+    "hardware",
+    "software",
+    "protocol",
+    "pulse_rate",
+    "country_code",
+    "pcm",
+    "flg",
+    "sensor_no",
+    "fuel_transfers",
+    "recovery_rate",
+    "recovery_rate_mean",
+    "temperature_c",
+    "vc_status",
+    "vapour_flow_rate",
+    "fuel_flow_rate",
+    "recovery_rate_pos",
+    "recovery_rate_neg",
+    "rec_rate_ma3",
+    "rec_rate_mean_ma3",
+    "temperature_ma3",
+    "vapour_flow_ma3",
+    "rec_rate_mean_ma7",
+    "rec_rate_mean_std3",
+    "rec_rate_mean_std7",
+    "temperature_ma7",
+    "temperature_std3",
+    "vapour_flow_ma7",
+    "vapour_flow_std3",
+    "recovery_rate_mean_lag1",
+    "recovery_rate_mean_lag3",
+    "recovery_rate_mean_diff1",
+    "recovery_rate_lag1",
+    "recovery_rate_lag3",
+    "recovery_rate_diff1",
+    "temperature_c_lag1",
+    "temperature_c_lag3",
+    "temperature_c_diff1",
+    "vapour_flow_rate_lag1",
+    "vapour_flow_rate_lag3",
+    "vapour_flow_rate_diff1",
+    "fuel_flow_rate_lag1",
+    "fuel_flow_rate_lag3",
+    "fuel_flow_rate_diff1",
+    "recovery_drop",
+    "days_since_prev",
+    "days_since_last_fault",
+    "fault_event_roll7",
+    "fault_event_roll30",
+    "fault_active_roll3"
+  ],
+  "categorical_features": [
+    "source_file",
+    "side",
+    "status_text",
+    "date",
+    "created_at"
+  ]
+}
